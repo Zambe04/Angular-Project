@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
+import { HttpClientModule } from '@angular/common/http';
+
+import {MatButtonModule} from '@angular/material/button';
 
 
 @NgModule({
@@ -11,6 +14,8 @@ import { LoginComponent } from './login/login.component';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
+    MatButtonModule,
     AuthRoutingModule
   ]
 })

@@ -1,0 +1,15 @@
+.example-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.dinamic-content{
+  padding: 20px;
+}

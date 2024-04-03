@@ -1,3 +1,12 @@
-<p>user-list works!</p>
-<a routerLink="users/14">Dettagli</a>
-<router-outlet></router-outlet>
+<div class="container" *ngIf="users && users.length > 0">
+  <div class="user-row" *ngFor="let user of users">
+    <button mat-fab color="primary" (click)="delete(user.id)">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <span><span class="name">Name: </span>{{user.name}}</span>
+    <span><span class="email">Email: </span>{{user.email}}</span>
+    <button mat-icon-button class="example-icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,3 +1,18 @@
-<a routerLink="users">Click here</a>
-<a routerLink="post">Click here</a>
+<mat-toolbar color="primary" class="example-toolbar">
+  <button mat-icon-button class="example-icon" routerLink="/users">
+    <mat-icon>home</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  <span>My App</span>
+</mat-toolbar>
+<mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="center"
+    (selectedTabChange)="onTabChanged($event)"
+  >
+    <mat-tab label="Users"></mat-tab>
+    <mat-tab label="Posts"></mat-tab>
+    <mat-tab label="Login"></mat-tab>
+</mat-tab-group>
 <router-outlet></router-outlet>
+
