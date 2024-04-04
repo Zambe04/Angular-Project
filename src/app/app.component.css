@@ -1,15 +1,20 @@
 .example-toolbar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 20px;
   margin-bottom: 15px;
 }
 
-.example-spacer {
-  flex: 1 1 auto;
+span{
+  margin-right: 20px;
 }
 
 .dinamic-content{
   padding: 20px;
+}
+
+.container{
+  display: flex;
+  align-items: center;
 }

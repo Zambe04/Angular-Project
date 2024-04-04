@@ -1,18 +1,24 @@
 <mat-toolbar color="primary" class="example-toolbar">
-  <button mat-icon-button class="example-icon" routerLink="/users">
+  <button mat-icon-button class="example-icon" (click)="openUsersList()">
     <mat-icon>home</mat-icon>
   </button>
-  <span class="example-spacer"></span>
-  <span>My App</span>
+  <div class="container">
+    <span>+LifePlus</span>
+    <button mat-icon-button class="example-icon" routerLink="/users" (click)="logout()">
+      <mat-icon>
+        <span class="material-symbols-outlined"> logout </span>
+      </mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 <mat-tab-group
-    mat-stretch-tabs="false"
-    mat-align-tabs="center"
-    (selectedTabChange)="onTabChanged($event)"
-  >
-    <mat-tab label="Users"></mat-tab>
-    <mat-tab label="Posts"></mat-tab>
-    <mat-tab label="Login"></mat-tab>
+  mat-stretch-tabs="false"
+  mat-align-tabs="center"
+  (selectedTabChange)="onTabChanged($event)"
+  [(selectedIndex)]="selectedIndex"
+>
+  <mat-tab label="Users" routerLink="/users"></mat-tab>
+  <mat-tab label="Posts" routerLink="/post"></mat-tab>
+  <mat-tab label="Login" routerLink="/login"></mat-tab>
 </mat-tab-group>
 <router-outlet></router-outlet>
-

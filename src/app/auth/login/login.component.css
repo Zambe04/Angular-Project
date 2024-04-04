@@ -1,20 +1,28 @@
-.container{
-  height: 80%;
+form{
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 80%;
   justify-content: center;
   align-items: center;
 }
 
-hr{
-  border: 1px solid rgb(148, 148, 148);
-  width: 350px;
-  margin-bottom: 30px;
+.get-token{
+  margin-bottom: 20px;
+}
+
+.input-field{
+  width: 40%;
+  border-radius: 10px;
+}
+
+a{
+  color: rgb(0, 31, 167);
 }
 
 .title{
-  font-size: 60px;
-  font-family:'Times New Roman', Times, serif;
-  color: rgb(148, 148, 148);
-  margin-bottom: 15px;
+  font-family: Roboto, sans-serif;
+  color: rgb(0, 31, 167);
+  font-size: 40px;
+  margin-bottom: 25px;
 }

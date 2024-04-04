@@ -1,6 +1,28 @@
-<div class="container">
-  <h1 class="title">Click Here to Login!</h1>
-  <hr>
-  <button mat-flat-button color="primary" (click)="openLogin()">Login</button>
-</div>
-
+<form [formGroup]="inputform" (ngSubmit)="onSubmit()">
+  <h1 class="title"><strong>ENTER THE TOKEN</strong></h1>
+  <div class="get-token">
+    <a href="https://gorest.co.in/consumer/login" target="_blank"
+      >click here to get your token!</a
+    >
+  </div>
+  <mat-form-field class="input-field">
+    <mat-label>Token</mat-label>
+    <input
+      matInput
+      type="text"
+      name="token"
+      formControlName="token"
+      minlength="5"
+    />
+    <mat-error *ngIf="inputform.touched && inputform.invalid"
+      >Token is <strong>required</strong></mat-error
+    >
+  </mat-form-field>
+  <button
+    mat-flat-button
+    color="primary"
+    type="submit"
+    [disabled]="!inputform.valid || btndisabled"
+  >Login
+  </button>
+</form>

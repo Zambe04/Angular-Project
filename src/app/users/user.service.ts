@@ -15,7 +15,7 @@ export class UserService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseURl, { headers: this.headers })
+    return this.http.get<User[]>(this.baseURl, {}) //{ headers: this.headers }
     // .pipe(
       // catchError((error) => {
         // if (error.status === 401) {
