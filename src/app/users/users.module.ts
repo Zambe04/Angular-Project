@@ -7,7 +7,11 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,6 +22,11 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatIconModule,
     MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatSelectModule,
     UsersRoutingModule
   ]
 })

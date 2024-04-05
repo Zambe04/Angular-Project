@@ -1,12 +1,59 @@
+<div class="container">
+  <div class="modify-section">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Search </mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>account_circle</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </mat-expansion-panel>
+    <button mat-flat-button color="primary" (click)="showForm()">Add</button>
+  </div>
+  <div class="form-section" *ngIf="showAddForm">
+    <form [formGroup]="addUserForm" (ngSubmit)="createUser()">
+      <div>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput type="text" name="name" formControlName="name">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput type="text" name="email" formControlName="email" email>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Gender</mat-label>
+        <mat-select name="gender"  formControlName="gender">
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Choose an ID</mat-label>
+        <input matInput type="text" name="id" formControlName="id" minlength="7">
+      </mat-form-field>
+    </div>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!addUserForm.valid">Create</button>
+    </form>
+  </div>
+</div>
+
 <div class="container" *ngIf="users && users.length > 0">
   <div class="user-row" *ngFor="let user of users">
-    <button mat-fab color="primary" (click)="delete(user.id)">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <span><span class="name">Name: </span>{{user.name}}</span>
-    <span><span class="email">Email: </span>{{user.email}}</span>
     <button mat-icon-button class="example-icon">
       <mat-icon>menu</mat-icon>
+    </button>
+    <span><span class="name">Name: </span>{{ user.name }}</span>
+    <span><span class="email">Email: </span>{{ user.email }}</span>
+    <button mat-icon-button color="accent" (click)="delete(user.id)">
+      <mat-icon>delete</mat-icon>
     </button>
   </div>
 </div>
