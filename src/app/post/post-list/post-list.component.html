@@ -1,1 +1,7 @@
-<p>post-list works!</p>
+<div class="container">
+  <div class="modify-section"></div>
+  <div class="post-block" *ngFor="let post of posts">
+    <h3>{{ post.title }}</h3>
+    <p>{{post.body}}</p>
+  </div>
+</div>

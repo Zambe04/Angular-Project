@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { User } from './users';
 import { AuthService } from '../auth/auth.service';
 
@@ -15,7 +15,7 @@ export class UserService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseURl, { headers: this.headers }).pipe(
+      return this.http.get<User[]>(this.baseURl, { headers: this.headers }).pipe(
       catchError((error) => {
         if (error.status === 401) {
           alert('Your session has expired! Please login again.');
@@ -50,8 +50,13 @@ export class UserService {
       .pipe(
         catchError((error) => {
           console.log(error);
-          return []
+          return [];
         })
       );
+  }
+
+  searchUser(searchValue: string): Observable<User[]> {
+    return this.http
+      .get<User[]>(`${this.baseURl}/?name=${searchValue}`)
   }
 }

@@ -24,13 +24,7 @@ export class AppComponent implements OnInit {
   }
 
   openUsersList() {
-    // inserire controllo del login
-    // if (!this.authService.isLoggedIn()) {
-    // alert('You must log in first!')
-    // return this.navToLogin();
-    // } else {
     this.navTo('users', 0);
-    // }
   }
 
   onTabChanged(event: MatTabChangeEvent): void {

@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 .user-row{
@@ -42,4 +42,19 @@ span{
 
 mat-form-field{
   margin-right: 10px;
+}
+
+.show-button{
+  margin: 20px 0;
+  width: 60%;
+  display: flex;
+  justify-content: flex-start !important;
+}
+
+.show-button > button{
+  margin-right: 10px;
+}
+
+.second{
+  padding-bottom: 20px;
 }
