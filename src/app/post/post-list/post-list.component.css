@@ -5,6 +5,28 @@
   padding-bottom: 10px;
 }
 
+.modify-section{
+  margin-top: 15px;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-section{
+  margin-top: 10px
+}
+
+.input-field{
+  width: 100%;
+}
+
+.id{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .post-block{
   width: 60%;
   padding: 15px;
@@ -14,4 +36,28 @@
 
 .post-block:hover{
   background-color: rgb(226, 226, 226);
+}
+
+.button-section{
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-container{
+  margin-top: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-container:hover{
+  background-color: rgb(240, 239, 239);
+}
+
+.comment-container > p {
+  margin: 3px;
+}
+
+.comment-name{
+  font-size: 15px;
 }

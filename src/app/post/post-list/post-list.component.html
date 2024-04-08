@@ -1,7 +1,96 @@
 <div class="container">
-  <div class="modify-section"></div>
-  <div class="post-block" *ngFor="let post of posts">
+  <div class="modify-section">
+    <form [formGroup]="searchForm" (ngSubmit)="searchPost()">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Search </mat-panel-title>
+          <mat-panel-description>
+            <mat-icon>account_circle</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field>
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            type="text"
+            name="searchValue"
+            formControlName="searchValue"
+          />
+        </mat-form-field>
+      </mat-expansion-panel>
+    </form>
+    <button mat-flat-button color="primary" (click)="showAddForm()">
+      Add Post
+    </button>
+  </div>
+  <div class="form-section">
+    <form
+      [formGroup]="addForm"
+      *ngIf="showForm"
+      (ngSubmit)="createPost(addForm.value)"
+    >
+      <mat-form-field class="input-field" appearance="fill">
+        <mat-label>Title</mat-label>
+        <input matInput name="title" formControlName="title" />
+      </mat-form-field>
+      <div class="id">
+        <mat-form-field class="input-field" appearance="fill">
+          <mat-label>ID</mat-label>
+          <input
+            matInput
+            name="id"
+            formControlName="id"
+            minlength="6"
+            maxlength="6"
+          />
+        </mat-form-field>
+        <mat-form-field class="input-field" appearance="fill">
+          <mat-label>User ID</mat-label>
+          <input
+            matInput
+            name="user_id"
+            formControlName="user_id"
+            minlength="7"
+            maxlength="7"
+          />
+        </mat-form-field>
+      </div>
+      <mat-form-field class="input-field" appearance="fill">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput name="body" formControlName="body"></textarea>
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!addForm.valid"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+  <div class="post-block" *ngFor="let post of posts; let i = index">
     <h3>{{ post.title }}</h3>
-    <p>{{post.body}}</p>
+    <p>{{ post.body }}</p>
+    <div class="button-section">
+      <button mat-button color="primary" (click)="toggleComments(i)">
+        Show Comments
+      </button>
+      <button mat-button color="primary" (click)="deletePost(post)">Delete</button>
+    </div>
+    <div *ngIf="showComments[i]">
+      <div *ngFor="let comment of comments">
+        <div *ngIf="post.id == comment.post_id" class="comment-container">
+          <p>
+            Name:
+            <span class="comment-name"
+              ><strong>{{ comment.name }}</strong></span
+            >
+          </p>
+          <p>Email: {{ comment.email }}</p>
+          <p>Text: {{ comment.body }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

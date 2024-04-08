@@ -59,4 +59,8 @@ export class UserService {
     return this.http
       .get<User[]>(`${this.baseURl}/?name=${searchValue}`)
   }
+
+  getUserDetail(id: number){
+    return this.http.get(this.baseURl+ "/" + id)
+  }
 }
