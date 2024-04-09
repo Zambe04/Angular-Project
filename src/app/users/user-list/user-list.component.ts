@@ -3,6 +3,7 @@ import { UserService } from '../user.service';
 import { User } from '../users';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PostService } from '../../post/post.service';
 
 @Component({
   selector: 'app-user-list',
@@ -15,7 +16,11 @@ export class UserListComponent implements OnInit {
   addUserForm!: FormGroup;
   searchForm!: FormGroup;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private ps: PostService
+  ) {}
 
   ngOnInit(): void {
     this.updateUsers();
@@ -68,7 +73,16 @@ export class UserListComponent implements OnInit {
       });
   }
 
-  userDetail(id: number){
-    this.router.navigate([`/users/${id}`]);
+  numberUsers(number: number) {
+    if (number === 5) {
+      this.users.length = number;
+    } else {
+      this.updateUsers();
+    }
+  }
+
+  userDetail(id: number) {
+    this.router.navigateByUrl(`/users/${id}`);
   }
 }
+

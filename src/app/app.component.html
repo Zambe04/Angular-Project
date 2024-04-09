@@ -1,10 +1,10 @@
 <mat-toolbar color="primary" class="example-toolbar">
-  <button mat-icon-button class="example-icon" (click)="openUsersList()">
+  <button mat-icon-button name="user-list" class="example-icon" (click)="openUsersList()">
     <mat-icon>home</mat-icon>
   </button>
   <div class="container">
     <span>+LifePlus</span>
-    <button mat-icon-button class="example-icon" routerLink="/users" (click)="logout()">
+    <button mat-icon-button class="example-icon" (click)="logout()">
       <mat-icon>
         <span class="material-symbols-outlined"> logout </span>
       </mat-icon>

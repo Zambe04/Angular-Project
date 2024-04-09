@@ -10,10 +10,10 @@ export class AuthService {
 
   constructor() { }
 
-  setToken(token: string) {
+  setToken(token: string): boolean {
     this.token = token;
     localStorage.setItem('token', token);
-    this.isLoggedIn = true;
+    return this.isLoggedIn = true;
   }
 
   getToken(){

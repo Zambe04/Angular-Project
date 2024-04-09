@@ -76,7 +76,7 @@
       <button mat-button color="primary" (click)="toggleComments(i)">
         Show Comments
       </button>
-      <button mat-button color="primary" (click)="deletePost(post)">Delete</button>
+      <button mat-button color="warn" (click)="deletePost(post)">Delete</button>
     </div>
     <div *ngIf="showComments[i]">
       <div *ngFor="let comment of comments">

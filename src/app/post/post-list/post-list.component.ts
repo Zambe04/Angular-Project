@@ -47,6 +47,7 @@ export class PostListComponent implements OnInit {
 
   showAddForm() {
     this.showForm = !this.showForm;
+    console.log(this.posts)
   }
 
   createPost(post: Post) {

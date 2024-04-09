@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,10 +8,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthService } from '../auth.service';
+import { of } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -24,17 +29,20 @@ describe('LoginComponent', () => {
         MatTabsModule,
         MatFormFieldModule,
         ReactiveFormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
       ],
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { queryParams: {} } },
+          useValue: { snapshot: { queryParams: of({}) } },
         },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
 
@@ -42,9 +50,33 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should contain the input and  button elements in the template', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('input').length).toBe(1);
-    expect(compiled.querySelectorAll('button').length).toBe(1);
+  it('should call login method on form submit', () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'setToken').and.returnValue(true);
+
+    const tokenInput = fixture.nativeElement.querySelector('input[name=token]');
+    const form = fixture.nativeElement.querySelector('form');
+
+    tokenInput.value =
+      '02902485391b31c01f3eb8827657ba693db7c64ffdb10413990f61aa86055690';
+    tokenInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    form.dispatchEvent(new Event('submit'));
+    expect(authService.setToken).toHaveBeenCalledWith(
+      '02902485391b31c01f3eb8827657ba693db7c64ffdb10413990f61aa86055690'
+    );
+  });
+
+  it('should not submit until token is correct', () => {
+    const tokenInput = fixture.nativeElement.querySelector('input[name=token]');
+    const btn = fixture.nativeElement.querySelector(
+      'button[mat-flat-button][disabled]'
+    );
+
+    tokenInput.value = 'not valid token';
+    fixture.detectChanges();
+
+    expect(btn).toBeTruthy();
   });
 });

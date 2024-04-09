@@ -1,4 +1,4 @@
-<form [formGroup]="inputform" (ngSubmit)="onSubmit()">
+<form [formGroup]="inputform" (ngSubmit)="onSubmit()" class="form">
   <h1 class="title"><strong>ENTER THE TOKEN</strong></h1>
   <div class="get-token">
     <a href="https://gorest.co.in/consumer/login" target="_blank"
@@ -12,7 +12,7 @@
       type="text"
       name="token"
       formControlName="token"
-      minlength="5"
+      minlength="20"
     />
     <mat-error *ngIf="inputform.touched && inputform.invalid"
       >Token is <strong>required</strong></mat-error

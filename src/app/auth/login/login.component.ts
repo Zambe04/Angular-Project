@@ -21,12 +21,10 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
+    const queryParams = this.route.snapshot.queryParams
+    const token = queryParams['token']
     if (token) {
     this.authService.setToken(token);
-    this.router.navigate(['/users']);
-    } else {
-    this.router.navigate(['/login']);
     }
 
     this.inputform = new FormGroup({
