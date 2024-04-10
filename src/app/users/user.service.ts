@@ -44,7 +44,7 @@ export class UserService {
       );
   }
 
-  addUser(user: User) {
+  addUser(user: User): Observable<User[]> {
     return this.http
       .post<User[]>(this.baseURl, user, { headers: this.headers })
       .pipe(

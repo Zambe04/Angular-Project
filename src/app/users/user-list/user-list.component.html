@@ -1,6 +1,6 @@
 <div class="container">
   <div class="modify-section">
-    <form [formGroup]="searchForm" (ngSubmit)="searchUser()">
+    <form [formGroup]="searchForm" (ngSubmit)="searchUser(searchForm.value.searchValue)">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title> Search </mat-panel-title>
@@ -20,10 +20,10 @@
         </mat-form-field>
       </mat-expansion-panel>
     </form>
-    <button mat-flat-button color="primary" (click)="showForm()">Add</button>
+    <button mat-flat-button name="add" color="primary" (click)="showForm()">Add</button>
   </div>
   <div class="form-section" *ngIf="showAddForm">
-    <form [formGroup]="addUserForm" (ngSubmit)="createUser()">
+    <form [formGroup]="addUserForm" (ngSubmit)="createUser(addUserForm.value)">
       <div>
         <mat-form-field>
           <mat-label>Name</mat-label>
@@ -84,8 +84,8 @@
     <button mat-icon-button class="example-icon" (click)="userDetail(user.id)">
       <mat-icon>menu</mat-icon>
     </button>
-    <span><span class="name">Name: </span>{{ user.name }}</span>
-    <span><span class="email">Email: </span>{{ user.email }}</span>
+    <span class="name-user"><span class="name">Name: </span>{{ user.name }}</span>
+    <span class="email-user"><span class="email">Email: </span>{{ user.email }}</span>
     <button mat-icon-button color="accent" (click)="delete(user.id)">
       <mat-icon>delete</mat-icon>
     </button>

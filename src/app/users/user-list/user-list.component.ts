@@ -50,9 +50,8 @@ export class UserListComponent implements OnInit {
     this.showAddForm = !this.showAddForm;
   }
 
-  createUser() {
+  createUser(user: User) {
     try {
-      const user: User = this.addUserForm.value;
       this.userService.addUser(user).subscribe(() => {
         this.userService.getUsers().subscribe((user) => {
           this.users = user;
@@ -65,9 +64,9 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  searchUser() {
+  searchUser(value: string) {
     this.userService
-      .searchUser(this.searchForm.value.searchValue)
+      .searchUser(value)
       .subscribe((user) => {
         this.users = user;
       });

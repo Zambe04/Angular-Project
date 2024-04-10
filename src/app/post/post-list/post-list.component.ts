@@ -64,8 +64,8 @@ export class PostListComponent implements OnInit {
     }
   }
 
-  searchPost(){
-    this.postService.searchPost(this.searchForm.value.searchValue).subscribe((data) => {
+  searchPost(value: string){
+    this.postService.searchPost(value).subscribe((data) => {
       this.posts = data
     })
   }

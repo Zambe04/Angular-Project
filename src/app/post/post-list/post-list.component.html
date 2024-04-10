@@ -1,6 +1,6 @@
 <div class="container">
   <div class="modify-section">
-    <form [formGroup]="searchForm" (ngSubmit)="searchPost()">
+    <form [formGroup]="searchForm" (ngSubmit)="searchPost(searchForm.value.searchValue)">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title> Search </mat-panel-title>
