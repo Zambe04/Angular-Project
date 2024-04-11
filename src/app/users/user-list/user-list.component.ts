@@ -23,7 +23,7 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.updateUsers();
+    this.updateUsers(10);
     this.addUserForm = new FormGroup({
       name: new FormControl('', Validators.required),
       email: new FormControl('', Validators.required),
@@ -36,13 +36,13 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  updateUsers() {
-    this.userService.getUsers().subscribe((user) => (this.users = user));
+  updateUsers(number: number) {
+    this.userService.getUsers(number).subscribe((user) => (this.users = user));
   }
 
   delete(id: number) {
     this.userService.deleteUser(id).subscribe(() => {
-      this.updateUsers();
+      this.updateUsers(10);
     });
   }
 
@@ -53,7 +53,7 @@ export class UserListComponent implements OnInit {
   createUser(user: User) {
     try {
       this.userService.addUser(user).subscribe(() => {
-        this.userService.getUsers().subscribe((user) => {
+        this.userService.getUsers(10).subscribe((user) => {
           this.users = user;
           this.addUserForm.reset();
           this.showForm();
@@ -73,15 +73,11 @@ export class UserListComponent implements OnInit {
   }
 
   numberUsers(number: number) {
-    if (number === 5) {
-      this.users.length = number;
-    } else {
-      this.updateUsers();
-    }
+    this.updateUsers(number);
   }
 
   userDetail(id: number) {
-    this.router.navigateByUrl(`/users/${id}`);
+    this.router.navigate([`/users/${id}`]);
   }
 }
 

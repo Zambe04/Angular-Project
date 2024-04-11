@@ -4,6 +4,9 @@ import { Post } from '../post';
 import { CommentService } from '../../comment/comment.service';
 import { Comment } from '../../comment/comment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../../users/user.service';
+import { User } from '../../users/users';
+import { Observable, forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
@@ -13,6 +16,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
   comments: Comment[] = [];
+  users: User[] = [];
+
   showComments: boolean[] = [];
   addForm!: FormGroup;
   searchForm!: FormGroup;
@@ -20,14 +25,30 @@ export class PostListComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.postService.getPost().subscribe((post) => (this.posts = post));
-    this.commentService
-      .getComment()
-      .subscribe((comment) => (this.comments = comment));
+    this.userService.getUsers(10).subscribe((data) => {
+      this.users = data;
+
+      const userPostRequests = this.users.map((user) =>
+        this.postService.getUserPost(user.id)
+      );
+
+      forkJoin(userPostRequests).subscribe((posts: Post[][]) => {
+        this.posts = posts.flatMap((posts) => posts);
+
+        const commentPostRequest = this.posts.map((post) =>
+          this.commentService.getComment(post.id)
+        );
+
+        forkJoin(commentPostRequest).subscribe((comments: Comment[][]) => {
+          this.comments = comments.flatMap((comments) => comments);
+        });
+      });
+    });
 
     this.addForm = new FormGroup({
       title: new FormControl('', Validators.required),
@@ -41,40 +62,63 @@ export class PostListComponent implements OnInit {
     });
   }
 
+  checkIfHasComment(post_id: number): boolean {
+    let hasComment = this.comments.some(
+      (comment) => comment.post_id == post_id
+    );
+    return hasComment;
+  }
+
   toggleComments(index: number) {
     this.showComments[index] = !this.showComments[index];
   }
 
   showAddForm() {
     this.showForm = !this.showForm;
-    console.log(this.posts)
   }
 
   createPost(post: Post) {
-    try{
+    try {
       this.postService.addPost(post).subscribe(() => {
-        this.postService.getPost().subscribe((post) => {
-          this.posts = post
-          this.addForm.reset()
+        const userPostRequests = this.users.map((user) =>
+          this.postService.getUserPost(user.id)
+        );
+
+        forkJoin(userPostRequests).subscribe((posts: Post[][]) => {
+          this.posts = posts.flatMap((posts) => posts);
+          this.addForm.reset();
           this.showAddForm();
-        })
-      })
-    }catch(error){
-      alert(error)
+        });
+      });
+    } catch (error) {
+      alert(error);
     }
   }
 
-  searchPost(value: string){
-    this.postService.searchPost(value).subscribe((data) => {
-      this.posts = data
-    })
+  searchPost(value: string) {
+    this.postService.searchPost(value).subscribe(() => {
+      const userPostRequests = this.users.map((user) =>
+        this.postService.getUserPost(user.id)
+      );
+      forkJoin(userPostRequests).subscribe((posts: Post[][]) => {
+        this.posts = posts.flatMap((posts) => posts);
+        this.posts = this.posts.filter((post) => {
+          return post.title.toLowerCase().includes(value.toLowerCase());
+        });
+      });
+    });
   }
 
-  deletePost(post: Post){
-    if(confirm("Are you sure to delete the post?")) {
-      this.postService.deleteUserPost(post.id).subscribe(() => {
-        this.postService.getPost().subscribe((post) => this.posts = post)
-      })
+  deletePost(post: Post) {
+    if (confirm('Are you sure to delete the post?')) {
+      this.postService.deleteUserPost(post).subscribe(() => {
+        const userPostRequests = this.users.map((user) =>
+          this.postService.getUserPost(user.id)
+        );
+        forkJoin(userPostRequests).subscribe((posts: Post[][]) => {
+          this.posts = posts.flatMap((posts) => posts);
+        });
+      });
     }
   }
 }

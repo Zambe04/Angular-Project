@@ -7,13 +7,13 @@ import { Comment } from './comment';
   providedIn: 'root',
 })
 export class CommentService {
-  baseURL = 'https://gorest.co.in/public/v2/comments';
+  baseURL = 'https://gorest.co.in/public/v2/posts';
   token = `Bearer ${localStorage.getItem('token')}`;
   headers = new HttpHeaders().set('Authorization', this.token);
 
   constructor(private http: HttpClient) {}
 
-  getComment(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.baseURL, { headers: this.headers });
+  getComment(id: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.baseURL}/${id}/comments`, { headers: this.headers });
   }
 }

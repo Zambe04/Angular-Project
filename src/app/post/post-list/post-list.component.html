@@ -1,6 +1,9 @@
 <div class="container">
   <div class="modify-section">
-    <form [formGroup]="searchForm" (ngSubmit)="searchPost(searchForm.value.searchValue)">
+    <form
+      [formGroup]="searchForm"
+      (ngSubmit)="searchPost(searchForm.value.searchValue)"
+    >
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title> Search </mat-panel-title>
@@ -70,25 +73,34 @@
     </form>
   </div>
   <div class="post-block" *ngFor="let post of posts; let i = index">
-    <h3>{{ post.title }}</h3>
-    <p>{{ post.body }}</p>
-    <div class="button-section">
-      <button mat-button color="primary" (click)="toggleComments(i)">
-        Show Comments
-      </button>
-      <button mat-button color="warn" (click)="deletePost(post)">Delete</button>
-    </div>
-    <div *ngIf="showComments[i]">
-      <div *ngFor="let comment of comments">
-        <div *ngIf="post.id == comment.post_id" class="comment-container">
-          <p>
-            Name:
-            <span class="comment-name"
-              ><strong>{{ comment.name }}</strong></span
-            >
-          </p>
-          <p>Email: {{ comment.email }}</p>
-          <p>Text: {{ comment.body }}</p>
+    <div *ngFor="let user of users">
+      <div *ngIf="post.user_id == user.id">
+        <div>
+          <h2>{{ user.name }}</h2>
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.body }}</p>
+        </div>
+        <div class="button-section">
+          <button mat-button color="primary" (click)="toggleComments(i)" [disabled]="!checkIfHasComment(post.id)">
+            Show Comments
+          </button>
+          <button mat-button color="warn" (click)="deletePost(post)">
+            Delete
+          </button>
+        </div>
+        <div *ngIf="showComments[i]">
+          <div *ngFor="let comment of comments">
+            <div *ngIf="post.id == comment.post_id" class="comment-container">
+              <p>
+                Name:
+                <span class="comment-name"
+                  ><strong>{{ comment.name }}</strong></span
+                >
+              </p>
+              <p>Email: {{ comment.email }}</p>
+              <p>Text: {{ comment.body }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
