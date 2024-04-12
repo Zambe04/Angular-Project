@@ -49,7 +49,7 @@ export class PostService {
   }
 
   searchPost(searchValue: string): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.baseURL}/?title=${searchValue}`);
+    return this.http.get<Post[]>(`${this.baseURL}/?title=${searchValue}`, {headers: this.headers});
   }
 
   deleteUserPost(post: Post): Observable<Post[]> {

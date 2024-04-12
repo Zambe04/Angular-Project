@@ -77,7 +77,7 @@
 
 <div class="second container" *ngIf="users && users.length > 0">
   <div class="user-row" *ngFor="let user of users">
-    <button mat-icon-button class="example-icon" (click)="userDetail(user.id)">
+    <button mat-icon-button class="example-icon" (click)="userDetail(user)">
       <mat-icon>menu</mat-icon>
     </button>
     <span class="name-user"><span class="name">Name: </span>{{ user.name }}</span>

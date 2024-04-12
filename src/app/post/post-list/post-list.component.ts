@@ -6,7 +6,7 @@ import { Comment } from '../../comment/comment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../users/user.service';
 import { User } from '../../users/users';
-import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',

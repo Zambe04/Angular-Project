@@ -1,1 +1,108 @@
-<p>user-detail works!</p>
+<div class="container">
+  <div class="information-section">
+    <h2 class="title-name">{{ user.name }}</h2>
+    <div class="row">
+      <span
+        >Email: <strong>{{ user.email }}</strong></span
+      >
+      <span
+        >ID: <strong>{{ user.id }}</strong></span
+      >
+    </div>
+    <div class="row">
+      <span
+        >Gender: <strong>{{ user.gender }}</strong></span
+      >
+      <span
+        >Status: <strong>{{ user.status }}</strong></span
+      >
+    </div>
+  </div>
+
+  <div class="post-section" *ngIf="postUploaded">
+    <div class="post-list" *ngIf="posts.length > 0">
+      <span>Number of Posts: {{ posts.length }}</span>
+      <div class="post-row" *ngFor="let post of posts; let i = index">
+        <h3>{{ post.title }}</h3>
+        <span>Body: {{ post.body }}</span>
+        <div>
+          <span>ID: {{ post.id }}</span>
+        </div>
+        <div class="button-section">
+          <button
+            mat-button
+            color="primary"
+            (click)="toggleComments(i)"
+            [disabled]="!btnDisabled(post.id)"
+          >
+            Show Comments
+          </button>
+          <button mat-button color="primary" (click)="showAddForm()">Add Comment</button>
+        </div>
+        <div *ngIf="showForm">
+          <form
+            class="form-section"
+            [formGroup]="addCommentForm"
+            (ngSubmit)="createComment(addCommentForm.value, post.id)"
+          >
+            <div class="first-form-section">
+              <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  name="name"
+                  formControlName="name"
+                />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  name="email"
+                  formControlName="email"
+                  email
+                />
+              </mat-form-field>
+            </div>
+            <div class="second-form-section">
+              <mat-form-field class="input-field" appearance="fill">
+                <mat-label>Textarea</mat-label>
+                <textarea
+                  matInput
+                  name="body"
+                  formControlName="body"
+                ></textarea>
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                type="submit"
+                [disabled]="!addCommentForm.valid"
+              >
+                Create
+              </button>
+            </div>
+          </form>
+        </div>
+        <div *ngIf="showComments[i]">
+          <div *ngFor="let comment of comments">
+            <div class="comment-section" *ngIf="comment.post_id == post.id">
+              <span>ID: {{ comment.id }}</span>
+              <span
+                >Name: <strong>{{ comment.name }}</strong></span
+              >
+              <span>Email: {{ comment.email }}</span>
+              <span>Body: {{ comment.body }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-post-section" *ngIf="!(posts.length > 0)">
+      <span>No Posts</span>
+    </div>
+  </div>
+</div>

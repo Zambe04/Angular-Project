@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { UserService } from '../user.service';
 import { User } from '../users';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -76,8 +76,8 @@ export class UserListComponent implements OnInit {
     this.updateUsers(number);
   }
 
-  userDetail(id: number) {
-    this.router.navigate([`/users/${id}`]);
+  userDetail(user: User) {
+    this.router.navigate([`/users/${user.id}`]);
   }
 }
 

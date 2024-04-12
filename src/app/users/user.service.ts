@@ -57,10 +57,10 @@ export class UserService {
 
   searchUser(searchValue: string): Observable<User[]> {
     return this.http
-      .get<User[]>(`${this.baseURl}/?name=${searchValue}`)
+      .get<User[]>(`${this.baseURl}/?name=${searchValue}`, {headers: this.headers})
   }
 
-  getUserDetail(id: number){
-    return this.http.get(this.baseURl+ "/" + id)
+  getUserDetail(id: number): Observable<User>{
+    return this.http.get<User>(`${this.baseURl}/${id}`, {headers: this.headers})
   }
 }
