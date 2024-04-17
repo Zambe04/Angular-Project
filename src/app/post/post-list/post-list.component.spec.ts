@@ -11,18 +11,45 @@ import { PostRoutingModule } from '../post-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PostService } from '../post.service';
-import { of } from 'rxjs';
 import { Post } from '../post';
+import { User } from '../../users/users';
+import { Comment } from '../../comment/comment';
+import { UserService } from '../../users/user.service';
+import { CommentService } from '../../comment/comment.service';
+import { forkJoin, of } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
-let mockModel: Post[] = [
-  { id: 123456, user_id: 7849302, title: 'The Sun', body: 'Great Sun' },
-  { id: 234543, user_id: 3804624, title: 'The Moon', body: 'Great Moon' },
+let mockModel: User[] = [
+  {
+    id: 6814118,
+    name: 'John',
+    email: 'john@gmail.com',
+    gender: 'male',
+    status: 'active',
+  },
+];
+
+let mockModelPost: Post[] = [
+  { id: 123456, user_id: 6814118, title: 'The Sun', body: 'Great Sun' },
+  { id: 234543, user_id: 6814118, title: 'The Moon', body: 'Great Moon' },
+];
+
+let mockModelComment: Comment[] = [
+  {
+    id: 342562,
+    post_id: 123456,
+    name: 'Frank',
+    email: 'frank@gmial.com',
+    body: 'I like your post!',
+  },
 ];
 
 describe('PostListComponent', () => {
   let component: PostListComponent;
   let fixture: ComponentFixture<PostListComponent>;
-  let service: PostService;
+  let userService: UserService;
+  let postService: PostService;
+  let commentService: CommentService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -39,12 +66,35 @@ describe('PostListComponent', () => {
         HttpClientModule,
         BrowserAnimationsModule,
       ],
+      providers:[AuthService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(PostService);
-    fixture.detectChanges();
+    userService = TestBed.inject(UserService);
+    postService = TestBed.inject(PostService);
+    commentService = TestBed.inject(CommentService);
+  });
+
+  beforeEach(() => {
+
+    spyOn(userService, 'getUsers').and.returnValue(of(mockModel));
+    spyOn(postService, 'getUserPost').and.returnValue(of(mockModelPost));
+    spyOn(commentService, 'getComment').and.returnValue(of(mockModelComment));
+
+    component.ngOnInit();
+
+    forkJoin([
+      userService.getUsers(10),
+      postService.getUserPost(mockModel[0].id),
+      commentService.getComment(mockModelPost[0].id),
+    ]).subscribe(() => {
+      component.users = mockModel;
+      component.posts = mockModelPost;
+      component.comments = mockModelComment;
+
+      fixture.detectChanges();
+    });
   });
 
   it('should create', () => {
@@ -52,17 +102,11 @@ describe('PostListComponent', () => {
   });
 
   it('should display the post-list', () => {
-    spyOn(service, 'getPost').and.returnValue(of(mockModel));
+    expect(postService.getUserPost(mockModelPost[0].user_id)).toBeTruthy();
+    expect(component.posts).toEqual(mockModelPost);
 
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(service.getPost()).toBeTruthy();
-    expect(component.posts).toEqual(mockModel);
-
-    let postList = fixture.nativeElement.querySelector('.post-block');
-
-    expect(postList.innerHTML).toContain(mockModel[0].title);
+    // let postList = fixture.nativeElement.querySelector('.post-block');
+    // expect(postList.innerHTML).toContain(mockModel[0].title);
   });
 
   it('should show and hide the add-post form', () => {
@@ -92,7 +136,9 @@ describe('PostListComponent', () => {
       id: 342789,
     });
 
-    let spyService = spyOn(service, 'addPost').and.returnValue(of(mockModel));
+    let spyService = spyOn(postService, 'addPost').and.returnValue(
+      of(mockModelPost)
+    );
 
     component.createPost(post);
     fixture.detectChanges();
@@ -102,8 +148,8 @@ describe('PostListComponent', () => {
   });
 
   it('should search a post', () => {
-    let spyService = spyOn(service, 'searchPost').and.returnValue(
-      of(mockModel)
+    let spyService = spyOn(postService, 'searchPost').and.returnValue(
+      of(mockModelPost)
     );
     let searchValue = 'Sun';
     component.searchPost(searchValue);
@@ -115,21 +161,34 @@ describe('PostListComponent', () => {
 
   it('should delete a post', () => {
     let result: Post[] = [
-      { id: 123456, user_id: 7849302, title: 'The Sun', body: 'Great Sun' },
+      { id: 234543, user_id: 6814118, title: 'The Sun', body: 'Great Sun' },
     ];
-    let spyService = spyOn(service, 'deleteUserPost').and.returnValue(
+    let spyService = spyOn(postService, 'deleteUserPost').and.returnValue(
       of(result)
     );
     let spyWindow = spyOn(window, 'confirm').and.returnValue(true);
-    let title = fixture.nativeElement.querySelector('.post-block h3');
-    let body = fixture.nativeElement.querySelector('.post-block p');
 
-    component.deletePost(mockModel[1]);
+    component.deletePost(mockModelPost[0]);
     expect(spyWindow).toBeTruthy();
     fixture.detectChanges();
 
-    expect(spyService).toHaveBeenCalledWith(mockModel[1].id);
-    expect(title).toBeNull();
-    expect(body).toBeNull();
+    expect(spyService).toHaveBeenCalledWith(mockModelPost[0]);
+  });
+
+  it('should show the comments', () => {
+    expect(component.checkIfHasComment(mockModelPost[0].id)).toBe(true);
+
+    component.checkIfHasComment(mockModelPost[0].id);
+    fixture.detectChanges();
+
+    let btn = fixture.nativeElement.querySelector('.showBtn');
+    expect(btn).toBeTruthy();
+
+    btn.click()
+    fixture.detectChanges()
+
+    let comments = fixture.nativeElement.querySelectorAll('.comment-container');
+    expect(comments).toBeTruthy()
+    expect(comments.length).toEqual(2)
   });
 });

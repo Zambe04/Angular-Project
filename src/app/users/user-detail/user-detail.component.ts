@@ -7,6 +7,7 @@ import { Post } from '../../post/post';
 import { CommentService } from '../../comment/comment.service';
 import { Comment } from '../../comment/comment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-user-detail',
@@ -26,7 +27,8 @@ export class UserDetailComponent implements OnInit {
   postUploaded: boolean = false;
   showComments: boolean[] = [];
   addCommentForm!: FormGroup;
-  showForm: boolean = false
+  showForm: boolean = false;
+  hasComment: any
 
   constructor(
     private userService: UserService,
@@ -36,15 +38,20 @@ export class UserDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let idUser = +this.route.snapshot.paramMap.get('id')!;
-
-    this.userService.getUserDetail(idUser).subscribe((user) => {
-      this.user = user;
-
-      this.postService.getUserPost(user.id).subscribe((posts) => {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          let idUser = +params['id'];
+          return this.userService.getUserDetail(idUser);
+        }),
+        switchMap((user) => {
+          this.user = user;
+          return this.postService.getUserPost(user.id);
+        })
+      )
+      .subscribe((posts) => {
         this.posts = posts;
         this.postUploaded = true;
-
         this.posts.forEach((post) => {
           this.commentService.getComment(post.id).subscribe((comments) => {
             let array = comments;
@@ -52,7 +59,6 @@ export class UserDetailComponent implements OnInit {
           });
         });
       });
-    });
 
     this.addCommentForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -66,13 +72,13 @@ export class UserDetailComponent implements OnInit {
   }
 
   btnDisabled(post_id: number): boolean {
-    const hasComment = this.comments.find(
+     this.hasComment = this.comments.find(
       (comment) => comment.post_id == post_id
     );
-    return hasComment ? true : false;
+    return this.hasComment ? true : false;
   }
 
-  showAddForm(){
+  showAddForm() {
     this.showForm = !this.showForm;
   }
 
@@ -81,7 +87,7 @@ export class UserDetailComponent implements OnInit {
       this.addCommentForm.reset();
       this.showAddForm();
 
-      this.comments = []
+      this.comments = [];
 
       this.posts.forEach((post) => {
         this.commentService.getComment(post.id).subscribe((comments) => {

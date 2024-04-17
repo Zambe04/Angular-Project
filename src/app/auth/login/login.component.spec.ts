@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +16,7 @@ import { of } from 'rxjs';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authService: AuthService
   let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
@@ -42,6 +43,7 @@ describe('LoginComponent', () => {
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    authService = TestBed.inject(AuthService)
     activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
@@ -50,8 +52,8 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
+
   it('should call login method on form submit', () => {
-    const authService = TestBed.inject(AuthService);
     spyOn(authService, 'setToken').and.returnValue(true);
 
     const tokenInput = fixture.nativeElement.querySelector('input[name=token]');

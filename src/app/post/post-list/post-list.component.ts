@@ -6,7 +6,7 @@ import { Comment } from '../../comment/comment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../users/user.service';
 import { User } from '../../users/users';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
@@ -30,25 +30,25 @@ export class PostListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getUsers(10).subscribe((data) => {
-      this.users = data;
-
-      const userPostRequests = this.users.map((user) =>
-        this.postService.getUserPost(user.id)
-      );
-
-      forkJoin(userPostRequests).subscribe((posts: Post[][]) => {
-        this.posts = posts.flatMap((posts) => posts);
+    this.userService.getUsers(10).pipe(
+      switchMap((user) => {
+        this.users = user;
+        const userPostRequests = this.users.map((user) =>
+          this.postService.getUserPost(user.id)
+        )
+        return forkJoin(userPostRequests)
+      }),
+      switchMap((usersPost: Post[][]) => {
+        this.posts = usersPost.flatMap((posts: any) => posts);
 
         const commentPostRequest = this.posts.map((post) =>
           this.commentService.getComment(post.id)
-        );
-
-        forkJoin(commentPostRequest).subscribe((comments: Comment[][]) => {
-          this.comments = comments.flatMap((comments) => comments);
-        });
-      });
-    });
+        )
+        return forkJoin(commentPostRequest)
+      })).subscribe((comments: Comment[][]) => {
+        this.comments = comments.flatMap((comments) => comments);
+      }
+    );
 
     this.addForm = new FormGroup({
       title: new FormControl('', Validators.required),
@@ -66,7 +66,7 @@ export class PostListComponent implements OnInit {
     let hasComment = this.comments.some(
       (comment) => comment.post_id == post_id
     );
-    return hasComment;
+    return hasComment ? true : false;
   }
 
   toggleComments(index: number) {

@@ -4,6 +4,7 @@ import { User } from '../users';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../post/post.service';
+import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -51,17 +52,17 @@ export class UserListComponent implements OnInit {
   }
 
   createUser(user: User) {
-    try {
-      this.userService.addUser(user).subscribe(() => {
-        this.userService.getUsers(10).subscribe((user) => {
-          this.users = user;
-          this.addUserForm.reset();
-          this.showForm();
-        });
-      });
-    } catch (error) {
-      alert(error);
-    }
+    this.userService.addUser(user).pipe(
+      switchMap(() => this.userService.getUsers(10)),
+      catchError(() => {
+        alert('An error occurred while creating the user. Please try again.');
+        return of([]);
+      })
+    ).subscribe((users) => {
+      this.users = users;
+      this.addUserForm.reset();
+      this.showForm();
+    });
   }
 
   searchUser(value: string) {

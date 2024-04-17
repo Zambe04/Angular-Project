@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -12,19 +11,18 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   inputform!: FormGroup;
   form: any;
-  btndisabled: boolean = this.authService.btndisabled
+  btndisabled: boolean = this.authService.btndisabled;
 
   constructor(
     private authService: AuthService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    const queryParams = this.route.snapshot.queryParams
-    const token = queryParams['token']
+    const queryParams = this.route.snapshot.queryParams;
+    const token = queryParams['token'];
     if (token) {
-    this.authService.setToken(token);
+      this.authService.setToken(token);
     }
 
     this.inputform = new FormGroup({
@@ -42,6 +40,6 @@ export class LoginComponent implements OnInit {
     Object.keys(this.inputform.controls).forEach((key) => {
       this.inputform.controls[key].setErrors(null);
     });
-    this.btndisabled = true
+    this.btndisabled = true;
   }
 }

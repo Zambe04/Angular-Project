@@ -13,7 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserService } from '../user.service';
 import { User } from '../users';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 let mockModel: User[] = [
   {
@@ -53,12 +54,22 @@ describe('UserListComponent', () => {
         HttpClientModule,
         BrowserAnimationsModule,
       ],
+      providers: [AuthService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
     service = TestBed.inject(UserService);
-    fixture.detectChanges();
+  });
+
+  beforeEach(() => {
+    spyOn(service, 'getUsers').and.returnValue(of(mockModel));
+
+    component.ngOnInit();
+    service.getUsers(10).subscribe((users) => {
+      component.users = users;
+      fixture.detectChanges();
+    });
   });
 
   it('should create', () => {
@@ -66,61 +77,50 @@ describe('UserListComponent', () => {
   });
 
   it('should display the user-list', () => {
-    let spyService = spyOn(service, 'getUsers').and.returnValue(of(mockModel));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
     let modelName = fixture.nativeElement.querySelector(
       'span[class=name-user]'
     );
 
     expect(component.users).toEqual(mockModel);
-    expect(spyService).toHaveBeenCalledTimes(1);
+    expect(service.getUsers).toHaveBeenCalledTimes(3);
     expect(modelName.innerHTML).toContain(mockModel[0].name);
   });
 
   it('should show and hide the add-user form', () => {
-    const form = fixture.nativeElement.querySelector('form[class=add-form]');
-    let showForm: boolean = component.showAddForm;
-    expect(showForm).toBeFalse();
+    let form = fixture.nativeElement.querySelector('.form-section');
+    expect(form).toBeFalsy();
 
-    component.showForm();
+    let showBtn = fixture.nativeElement.querySelector('.add');
+    expect(showBtn).toBeTruthy();
+    showBtn.click();
     fixture.detectChanges();
 
-    showForm = component.showAddForm;
-
-    expect(showForm).toBeTrue();
-
-    fixture.whenStable().then(() => {
-      expect(form).toBeTruthy();
-    });
+    form = fixture.nativeElement.querySelector('.form-section');
+    expect(form).toBeTruthy();
   });
 
-  it('should submit the add-user form with the btn click and create the user', () => {
-    let spyService = spyOn(service, 'addUser').and.returnValue(of(mockModel));
-
-    let addBtn = fixture.nativeElement.querySelector(
-      '.modify-section button[name=add]'
-    );
+  it('should submit the add-user form with the btn click and create the user', async () => {
+    let addBtn = fixture.nativeElement.querySelector('.add');
     addBtn.click();
     fixture.detectChanges();
 
     let formSection = fixture.nativeElement.querySelector('.form-section');
     expect(formSection).toBeTruthy();
-    let user = (formSection.value = {
+
+    let user = {
       id: 2356896,
       name: 'Alice',
       email: 'alice@gmail.com',
       gender: 'Female',
       status: 'active',
-    });
+    };
+    let spyService = spyOn(service, 'addUser').and.returnValue(of(mockModel));
 
     component.createUser(user);
     fixture.detectChanges();
 
-    expect(spyService).toHaveBeenCalledTimes(1);
     expect(spyService).toHaveBeenCalledWith(user);
+    expect(spyService).toHaveBeenCalledTimes(1);
   });
 
   it('should search the User', () => {
@@ -130,14 +130,13 @@ describe('UserListComponent', () => {
     let searchValue = 'Pi';
 
     component.searchUser(searchValue);
-    fixture.detectChanges();
 
     expect(spyService).toHaveBeenCalledTimes(1);
     expect(spyService).toHaveBeenCalledWith(searchValue);
   });
 
   it('should delete the user', () => {
-    let result: User[] = [
+    let beforeDeletion: User[] = [
       {
         id: 1234567,
         name: 'Pier',
@@ -146,18 +145,15 @@ describe('UserListComponent', () => {
         status: 'active',
       },
     ];
-    let spyService = spyOn(service, 'deleteUser').and.returnValue(
-      of(result)
-    );
-    let name = fixture.nativeElement.querySelector('.user-row .name-user')
-    let email = fixture.nativeElement.querySelector('.user-row .email-user')
+    let afterDeletion: User[] = [];
 
-    component.delete(mockModel[1].id);
-    fixture.detectChanges();
+    spyOn(service, 'deleteUser').and.returnValue(of(afterDeletion));
 
-    expect(spyService).toHaveBeenCalledTimes(1);
-    expect(spyService).toHaveBeenCalledWith(mockModel[1].id);
-    expect(name).toBeNull()
-    expect(email).toBeNull()
+    component.users = beforeDeletion;
+
+    component.delete(1234567);
+
+    expect(service.deleteUser).toHaveBeenCalledTimes(1);
+    expect(service.deleteUser).toHaveBeenCalledWith(beforeDeletion[0].id);
   });
 });

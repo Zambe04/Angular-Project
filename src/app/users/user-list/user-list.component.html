@@ -1,6 +1,9 @@
 <div class="container">
   <div class="modify-section">
-    <form [formGroup]="searchForm" (ngSubmit)="searchUser(searchForm.value.searchValue)">
+    <form
+      [formGroup]="searchForm"
+      (ngSubmit)="searchUser(searchForm.value.searchValue)"
+    >
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title> Search </mat-panel-title>
@@ -20,7 +23,9 @@
         </mat-form-field>
       </mat-expansion-panel>
     </form>
-    <button mat-flat-button name="add" color="primary" (click)="showForm()">Add</button>
+    <button mat-flat-button class="add" color="primary" (click)="showForm()">
+      Add
+    </button>
   </div>
   <div class="form-section" *ngIf="showAddForm">
     <form [formGroup]="addUserForm" (ngSubmit)="createUser(addUserForm.value)">
@@ -50,6 +55,7 @@
         </mat-form-field>
       </div>
       <button
+        class="submitBtn"
         mat-flat-button
         color="primary"
         type="submit"
@@ -60,9 +66,7 @@
     </form>
   </div>
   <div class="show-button">
-    <button mat-button color="primary" (click)="numberUsers(5)">
-      Show 5
-    </button>
+    <button mat-button color="primary" (click)="numberUsers(5)">Show 5</button>
     <button mat-button color="primary" (click)="numberUsers(10)">
       Show 10
     </button>
@@ -80,9 +84,13 @@
     <button mat-icon-button class="example-icon" (click)="userDetail(user)">
       <mat-icon>menu</mat-icon>
     </button>
-    <span class="name-user"><span class="name">Name: </span>{{ user.name }}</span>
-    <span class="email-user"><span class="email">Email: </span>{{ user.email }}</span>
-    <button mat-icon-button color="accent" (click)="delete(user.id)">
+    <span class="name-user"
+      ><span class="name">Name: </span>{{ user.name }}</span
+    >
+    <span class="email-user"
+      ><span class="email">Email: </span>{{ user.email }}</span
+    >
+    <button mat-icon-button class="deleteBtn" color="accent" (click)="delete(user.id)">
       <mat-icon>delete</mat-icon>
     </button>
   </div>

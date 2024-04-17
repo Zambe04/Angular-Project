@@ -31,13 +31,21 @@
         <div class="button-section">
           <button
             mat-button
+            class="showBtn"
             color="primary"
             (click)="toggleComments(i)"
             [disabled]="!btnDisabled(post.id)"
           >
             Show Comments
           </button>
-          <button mat-button color="primary" (click)="showAddForm()">Add Comment</button>
+          <button
+            mat-button
+            color="primary"
+            class="addBtn"
+            (click)="showAddForm()"
+          >
+            Add Comment
+          </button>
         </div>
         <div *ngIf="showForm">
           <form
@@ -76,6 +84,7 @@
                 ></textarea>
               </mat-form-field>
               <button
+                class="submitBtn"
                 mat-flat-button
                 color="primary"
                 type="submit"

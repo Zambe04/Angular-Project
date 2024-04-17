@@ -11,17 +11,24 @@ export class AuthService {
   constructor() { }
 
   setToken(token: string): boolean {
+    if (token === '') {
+      this.isLoggedIn = false
+      return false
+    }
     this.token = token;
     localStorage.setItem('token', token);
-    return this.isLoggedIn = true;
+    this.isLoggedIn = true;
+    return true
   }
 
   getToken(){
     if (this.token) {
+      this.isLoggedIn = true;
       return this.token;
     }
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
+      this.isLoggedIn = true;
       this.token = storedToken;
       return storedToken;
     }
@@ -34,4 +41,5 @@ export class AuthService {
     this.isLoggedIn = false
   }
 }
+
 

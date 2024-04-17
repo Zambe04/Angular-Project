@@ -63,6 +63,7 @@
         <textarea matInput name="body" formControlName="body"></textarea>
       </mat-form-field>
       <button
+        class="submitBtn"
         mat-flat-button
         color="primary"
         type="submit"
@@ -81,7 +82,13 @@
           <p>{{ post.body }}</p>
         </div>
         <div class="button-section">
-          <button mat-button color="primary" (click)="toggleComments(i)" [disabled]="!checkIfHasComment(post.id)">
+          <button
+            mat-button
+            color="primary"
+            class="showBtn"
+            (click)="toggleComments(i)"
+            [disabled]="!checkIfHasComment(post.id)"
+          >
             Show Comments
           </button>
           <button mat-button color="warn" (click)="deletePost(post)">

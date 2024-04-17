@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { Comment } from './comment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +11,8 @@ export class CommentService {
   baseURL = 'https://gorest.co.in/public/v2/posts';
   token = `Bearer ${localStorage.getItem('token')}`;
   headers = new HttpHeaders().set('Authorization', this.token);
-  authService: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getComment(id: number): Observable<Comment[]> {
     return this.http
